@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.mapper.PermissionMapper" >
+    <resultMap id="BaseResultMap" type="com.admin.model.Permission" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="permission_name" property="permissionName" jdbcType="VARCHAR" />
+        <result column="uri" property="uri" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`permission_name`,`uri`
+    </sql>
+
+    <select id="findById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `permission`
+        WHERE
+        `id`=#{id}
+    </select>
+
+
+    <select id="findByIds" parameterType="ArrayList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `permission`
+        WHERE `id` IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getCount" resultType="Long" parameterType="com.admin.param.PermissionParam" >
+        SELECT
+            COUNT(1)
+        FROM
+            `permission`
+    </select>
+
+
+    <select id="getList" parameterType="com.admin.param.PermissionParam" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `permission`
+        ORDER BY `id` DESC
+        LIMIT #{beginLine}, #{pageSize}
+    </select>
+
+    <insert id="insert" parameterType="com.admin.model.Permission">
+        INSERT INTO `permission`(`permission_name`,`permission_ids`) VALUE  (#{permissionName}, #{permissionIds})
+    </insert>
+    <update id="update" parameterType="com.admin.model.Permission" >
+        UPDATE  `permission` SET
+        <if test="uri != null">`uri` = #{uri},</if>
+        <if test="permissionName != null">`permission_name` = #{permissionName},</if>
+        id = #{id}
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long" >   DELETE FROM `permission` WHERE id =#{id} </delete>
+</mapper>

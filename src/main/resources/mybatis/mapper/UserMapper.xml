@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.mapper.UserMapper" >
+    <resultMap id="BaseResultMap" type="com.admin.model.User" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Where_List">
+        <if test="username != null  and username != ''"> and usernaem = #{usernaem} </if>
+    </sql>
+
+    <sql id="Base_Column_List">
+        `id`,`username`,`password`,`role_id`
+    </sql>
+
+    <select id="findByUsername" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM `user_info`
+        WHERE
+            `username`=#{username}
+    </select>
+
+    <select id="getCount" resultType="Long" parameterType="com.admin.param.UserParam" >
+        SELECT
+            COUNT(1)
+        FROM
+            `user_info`
+        WHERE 1=1
+            <include refid="Base_Where_List" />
+    </select>
+
+
+    <select id="getList" parameterType="com.admin.param.UserParam" resultMap="BaseResultMap" >
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM `user_info` WHERE 1=1
+            <include refid="Base_Where_List" />
+        ORDER BY `id` DESC
+        LIMIT #{beginLine}, #{pageSize}
+    </select>
+
+    <insert id="insert" parameterType="com.admin.model.User">
+        INSERT INTO `user_info`(`username`,`password`) VALUE  (#{username}, #{password})
+    </insert>
+    <update id="update" parameterType="com.admin.model.User" >
+        UPDATE  `user_info` SET
+            <if test="username != null">`username` = #{username},</if>
+            <if test="password != null">`password` = #{password},</if>
+            id = #{id}
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long" >   DELETE FROM `user_info` WHERE id =#{id} </delete>
+</mapper>

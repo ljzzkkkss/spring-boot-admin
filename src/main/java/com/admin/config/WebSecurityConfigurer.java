@@ -23,10 +23,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Resource
     private AuthenticationLogoutSuccessHandler authenticationLogoutSuccessHandler;
     @Resource
-    private NoAuthenticationHandler noAuthenticationHandler;
+    CustomizeSessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(customerAuthenticationProvider);
     }
 
@@ -35,7 +35,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                 .disable()
-                .httpBasic().authenticationEntryPoint(customerAuthenticationEntryPoint)
+                .httpBasic()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/v2/api-docs","/swagger-resources","/swagger-resources/**","/swagger-ui.html","/webjars/**","/success","/loginFail","/regist","/needLogin","/noPermission","/error")
@@ -43,20 +43,22 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailHandler)
-                .permitAll()
-                .and()
                 .logout()
                 .logoutSuccessHandler(authenticationLogoutSuccessHandler)
                 .permitAll()
                 .and()
+                .formLogin()
+                .loginProcessingUrl("/login")
+                .permitAll()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailHandler)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(customerAuthenticationEntryPoint)
+                .and()
                 .sessionManagement()
-                .maximumSessions(1);
-
-        http.exceptionHandling().accessDeniedHandler(noAuthenticationHandler);
+                .maximumSessions(1)
+                .expiredSessionStrategy(sessionInformationExpiredStrategy);
     }
 
 }

@@ -10,4 +10,5 @@ public class ReturnType {
     public static final Result NO_SESSION = new Result("0103","session失效！");
     public static final Result NEED_LOGIN = new Result("0104","需要登录！");
     public static final Result NO_PERMISSION = new Result("0105","无权限！");
+    public static final Result METHOD_ERROR = new Result("0106", "请求头Method错误！");
 }

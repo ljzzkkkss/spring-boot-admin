@@ -2,9 +2,7 @@ package com.admin.service.impl;
 
 import com.admin.mapper.PermissionMapper;
 import com.admin.model.Permission;
-import com.admin.model.User;
 import com.admin.param.PermissionParam;
-import com.admin.param.UserParam;
 import com.admin.service.PermissionService;
 import org.springframework.stereotype.Service;
 

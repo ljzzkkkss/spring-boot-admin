@@ -23,7 +23,7 @@ public class AdminUser implements UserDetails {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         for(Permission permission : permissions){
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + permission.getPermissionName().toUpperCase()));
+            authorities.add(new SimpleGrantedAuthority(permission.getPermissionName().toUpperCase()));
         }
         return authorities;
     }
